@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const router = express.Router();
+const { students, classes } = require("./data");
 
 router.use(bodyParser.json());
 
@@ -11,8 +12,6 @@ class Student {
     this.inClass = inClass;
   }
 }
-
-const students = [];
 
 router.post(
   "/student",
@@ -27,6 +26,13 @@ router.post(
     }
     if (!req.body.inClass) {
       res.status(400).send("Missing student class");
+      return;
+    }
+    if (
+      classes.find((newClass) => newClass.name === req.body.inClass) ===
+      undefined
+    ) {
+      res.status(404).send("Class not found");
       return;
     }
     if (students.find((student) => student.id === req.body.id) !== undefined) {
@@ -112,4 +118,4 @@ router.get("/student/class/:inClass", function (req, res) {
   else res.status(404).send("Student not found");
 });
 
-module.exports = { router, students };
+module.exports = { router };

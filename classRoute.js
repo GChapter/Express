@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const router = express.Router();
-const { students } = require("./studentRoute");
+const { students, classes } = require("./data");
 
 router.use(bodyParser.json());
 
@@ -11,8 +11,6 @@ class Class {
     this.name = name;
   }
 }
-
-const classes = [];
 
 router.post(
   "/class",
@@ -69,9 +67,10 @@ router.put(
 router.delete(
   "/class/:name",
   function (req, res, next) {
-    const student = students.find((student) => student.inClass === req.params.name);
+    const student = students.find(
+      (student) => student.inClass === req.params.name
+    );
     if (student) {
-      console.log(student);
       res.status(400).send("Class is not empty");
       return;
     }
@@ -101,4 +100,4 @@ router.get("/class/:id", function (req, res) {
   res.send(classIndex);
 });
 
-module.exports = router;
+module.exports = { router };
